@@ -46,4 +46,26 @@
 
 - Pull relevant files, runs calculations, produces results.json, report.pdf.
 - Builds merkle tree over dataset to compute Merkle root verification.
+- Pin MRV bunde to IPFS -> get cid.
+- stores it in database.
+
+### 5. Verification:
+
+- Verifier reviews via verifier dashboard; reruns calculations using provided scripts, to check the data uniqueness and result validity.
+- Verifier signs approval (ECDSA signature) and uploads verified package.
+
+### 6. On-chain MRV commit:
+
+- Verifier commits the verified MRV bundle by calling the submitVerifiedMRV(projectID, vintage, merkleroor, cid, verifierSig) on the registry contract.
+- Contract will validate Verifier role and emits MRVCommitted event.
+
+### 7: Issance:
+
+- NCCR admin calls mintCredits(projectID, vintage, qty) -> ERC-1155 tokens minted and buffer allocation done.
+
+### 8: Trade/Retirement:
+- Tokens transfered via standard ERC-1155 methods.
+- To reture: retire(tokenId, qty, beneficiary, purpose, certCID)
+
+
 
