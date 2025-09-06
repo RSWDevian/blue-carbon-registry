@@ -66,6 +66,3 @@
 ### 8: Trade/Retirement:
 - Tokens transfered via standard ERC-1155 methods.
 - To reture: retire(tokenId, qty, beneficiary, purpose, certCID)
-
-
-
