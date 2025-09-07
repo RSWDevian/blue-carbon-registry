@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectToDB } from "@/utils/db";
+import { connectToDatabase } from "@/utils/db";
 import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -8,18 +8,24 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function POST(req) {
   const data = await req.json();
-  await connectToDB();
+  await connectToDatabase();
 
   // Find user by email
   const user = await User.findOne({ email: data.email });
   if (!user) {
-    return NextResponse.json({ success: false, message: "Invalid credentials" }, { status: 401 });
+    return NextResponse.json(
+      { success: false, message: "Invalid credentials" },
+      { status: 401 }
+    );
   }
 
   // Compare password
   const isMatch = await bcrypt.compare(data.password, user.password);
   if (!isMatch) {
-    return NextResponse.json({ success: false, message: "Invalid credentials" }, { status: 401 });
+    return NextResponse.json(
+      { success: false, message: "Invalid credentials" },
+      { status: 401 }
+    );
   }
 
   // Generate JWT token

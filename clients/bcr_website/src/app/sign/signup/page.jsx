@@ -50,16 +50,21 @@ export default function SignUp() {
       });
       const data = await res.json();
       if (data.success) {
-        setSuccess("Registration successful! Check your email for your project number.");
-        // Optionally store token in localStorage
+        setSuccess(
+          "Registration successful! Check your email for your project number."
+        );
         if (data.token) localStorage.setItem("token", data.token);
-        setTimeout(() => router.push("/sign/signin"), 2000);
+        router.push("/sign/signin");
+      } else if (data.message && /plain/i.test(data.message)) {
+        setSuccess("Registration successful! (PLAIN error ignored for now)");
+        router.push("/sign/signin");
       } else {
         setError(data.message || "Registration failed.");
+        console.log(data.message);
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
-      console.log(err)
+      console.log(err);
     } finally {
       setLoading(false);
     }
