@@ -10,9 +10,7 @@ import {
   Container,
   Grid,
   Paper,
-  IconButton,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -55,21 +53,6 @@ export default function Home() {
         elevation={0}
         sx={{ bgcolor: "transparent", boxShadow: "none", pt: 2 }}
       >
-        <IconButton
-          onClick={() => router.push("/")}
-          sx={{
-            position: "fixed",
-            top: 32,
-            right: 32,
-            bgcolor: "#fff",
-            border: "1px solid #e2e8f0",
-            boxShadow: 1,
-            "&:hover": { bgcolor: "#f1f5f9" },
-          }}
-          aria-label="Go to Home"
-        >
-          <HomeIcon sx={{ color: "#2563eb" }} />
-        </IconButton>
         <Toolbar sx={{ justifyContent: "space-between", px: { xs: 1, md: 6 } }}>
           <Typography
             variant="h6"

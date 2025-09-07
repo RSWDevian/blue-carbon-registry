@@ -9,8 +9,12 @@ import {
   Button,
   Link,
   MenuItem,
+  IconButton,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
+import HomeIcon from "@mui/icons-material/Home";
 
 const accountTypes = [
   { value: "collector", label: "Collector" },
@@ -28,6 +32,38 @@ export default function SignUp() {
     password: "",
     accountType: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSuccess("Registration successful! Check your email for your project number.");
+        // Optionally store token in localStorage
+        if (data.token) localStorage.setItem("token", data.token);
+        setTimeout(() => router.push("/sign/signin"), 2000);
+      } else {
+        setError(data.message || "Registration failed.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      console.log(err)
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box
@@ -39,6 +75,21 @@ export default function SignUp() {
         justifyContent: "center",
       }}
     >
+      <IconButton
+        onClick={() => router.push("/")}
+        sx={{
+          position: "fixed",
+          top: 32,
+          right: 32,
+          bgcolor: "#fff",
+          border: "1px solid #e2e8f0",
+          boxShadow: 1,
+          "&:hover": { bgcolor: "#f1f5f9" },
+        }}
+        aria-label="Go to Home"
+      >
+        <HomeIcon sx={{ color: "#2563eb" }} />
+      </IconButton>
       <Paper
         elevation={3}
         sx={{
@@ -58,52 +109,62 @@ export default function SignUp() {
         >
           Register
         </Typography>
-        <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+          component="form"
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          onSubmit={handleSubmit}
+        >
           <TextField
             label="Name"
             value={form.name}
-            onChange={e => setForm({ ...form, name: e.target.value })}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
             fullWidth
             InputProps={{ sx: { borderRadius: 2 } }}
+            required
           />
           <TextField
             label="Email"
             type="email"
             value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
             fullWidth
             InputProps={{ sx: { borderRadius: 2 } }}
+            required
           />
           <TextField
             label="Phone"
             type="tel"
             value={form.phone}
-            onChange={e => setForm({ ...form, phone: e.target.value })}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
             fullWidth
             InputProps={{ sx: { borderRadius: 2 } }}
+            required
           />
           <TextField
             label="Wallet Key"
             value={form.wallet}
-            onChange={e => setForm({ ...form, wallet: e.target.value })}
+            onChange={(e) => setForm({ ...form, wallet: e.target.value })}
             fullWidth
             InputProps={{ sx: { borderRadius: 2 } }}
+            required
           />
           <TextField
             label="Password"
             type="password"
             value={form.password}
-            onChange={e => setForm({ ...form, password: e.target.value })}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
             fullWidth
             InputProps={{ sx: { borderRadius: 2 } }}
+            required
           />
           <TextField
             select
             label="Type of Account"
             value={form.accountType}
-            onChange={e => setForm({ ...form, accountType: e.target.value })}
+            onChange={(e) => setForm({ ...form, accountType: e.target.value })}
             fullWidth
             InputProps={{ sx: { borderRadius: 2 } }}
+            required
           >
             {accountTypes.map((type) => (
               <MenuItem key={type.value} value={type.value}>
@@ -111,13 +172,24 @@ export default function SignUp() {
               </MenuItem>
             ))}
           </TextField>
+          {error && <Alert severity="error">{error}</Alert>}
+          {success && <Alert severity="success">{success}</Alert>}
           <Button
             variant="contained"
             color="primary"
-            sx={{ mt: 2, borderRadius: 2, fontWeight: 600, fontSize: "1rem", py: 1.2 }}
+            sx={{
+              mt: 2,
+              borderRadius: 2,
+              fontWeight: 600,
+              fontSize: "1rem",
+              py: 1.2,
+            }}
             fullWidth
+            type="submit"
+            disabled={loading}
+            startIcon={loading && <CircularProgress size={20} />}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </Button>
         </Box>
         <Typography align="center" sx={{ mt: 3, fontSize: 16 }}>
