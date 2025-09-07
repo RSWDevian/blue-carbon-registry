@@ -33,25 +33,34 @@ class FieldForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final inputDecoration = InputDecoration(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+
     return Form(
       key: formKey,
       child: Column(
         children: [
           TextFormField(
             controller: projectIdController,
-            decoration: InputDecoration(labelText: 'Project ID'),
+            decoration: inputDecoration.copyWith(labelText: 'Project ID'),
             validator: (value) => value == null || value.isEmpty ? 'Required' : null,
           ),
+          SizedBox(height: 16),
           TextFormField(
             controller: projectNameController,
-            decoration: InputDecoration(labelText: 'Project Name'),
+            decoration: inputDecoration.copyWith(labelText: 'Project Name'),
             validator: (value) => value == null || value.isEmpty ? 'Required' : null,
           ),
+          SizedBox(height: 16),
           TextFormField(
             controller: collectorIdController,
-            decoration: InputDecoration(labelText: 'Collector ID'),
+            decoration: inputDecoration.copyWith(labelText: 'Collector ID'),
             validator: (value) => value == null || value.isEmpty ? 'Required' : null,
           ),
+          SizedBox(height: 16),
           DropdownButtonFormField<String>(
             value: selectedEcosystemType,
             items: [
@@ -62,14 +71,16 @@ class FieldForm extends StatelessWidget {
               'other',
             ].map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
             onChanged: onEcosystemTypeChanged,
-            decoration: InputDecoration(labelText: 'Ecosystem Type'),
+            decoration: inputDecoration.copyWith(labelText: 'Ecosystem Type'),
             validator: (value) => value == null || value.isEmpty ? 'Required' : null,
           ),
+          SizedBox(height: 16),
           TextFormField(
             controller: notesController,
-            decoration: InputDecoration(labelText: 'Field Notes'),
+            decoration: inputDecoration.copyWith(labelText: 'Field Notes'),
             maxLines: 3,
           ),
+          SizedBox(height: 16),
           Row(
             children: [
               Text(latitude != null && longitude != null
