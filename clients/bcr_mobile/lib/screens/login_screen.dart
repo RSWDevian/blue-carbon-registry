@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
+import '../services/auth_service.dart'; // Import your auth service
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,7 +15,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -76,13 +74,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     : ElevatedButton(
                         onPressed: () async {
                           setState(() => _loading = true);
-                          await authProvider.login(
+                          String? error = await signIn(
                             _emailController.text,
                             _passwordController.text,
                           );
                           setState(() => _loading = false);
-                          if (authProvider.isLoggedIn) {
-                            Navigator.pushReplacementNamed(context, '/dashboard');
+                          if (error == null) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/dashboard',
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Login failed: $error')),
+                            );
                           }
                         },
                         child: const Text('Login'),
