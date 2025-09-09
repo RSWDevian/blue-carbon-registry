@@ -1,0 +1,81 @@
+version: "3.8"
+services:
+  node1:
+    image: hyperledger/besu:latest
+    container_name: besu-node1
+    volumes:
+      - ./Node-1/data:/opt/besu/data
+      - ./genesis.json:/opt/besu/genesis.json
+    command: >
+      --data-path=/opt/besu/data
+      --genesis-file=/opt/besu/genesis.json
+      --network-id=2025
+      --rpc-http-enabled
+      --rpc-http-port=8545
+      --host-allowlist=*
+      --rpc-http-cors-origins=all
+      --p2p-port=30303
+      --bootnodes=
+    ports:
+      - 8545:8545
+      - 30303:30303
+
+  node2:
+    image: hyperledger/besu:latest
+    container_name: besu-node2
+    volumes:
+      - ./Node-2/data:/opt/besu/data
+      - ./genesis.json:/opt/besu/genesis.json
+    command: >
+      --data-path=/opt/besu/data
+      --genesis-file=/opt/besu/genesis.json
+      --network-id=2025
+      --rpc-http-enabled
+      --rpc-http-port=8546
+      --host-allowlist=*
+      --rpc-http-cors-origins=all
+      --p2p-port=30304
+      --bootnodes=enode://<node1_enode>@besu-node1:30303
+    ports:
+      - 8546:8546
+      - 30304:30304
+
+  node3:
+    image: hyperledger/besu:latest
+    container_name: besu-node3
+    volumes:
+      - ./Node-3/data:/opt/besu/data
+      - ./genesis.json:/opt/besu/genesis.json
+    command: >
+      --data-path=/opt/besu/data
+      --genesis-file=/opt/besu/genesis.json
+      --network-id=2025
+      --rpc-http-enabled
+      --rpc-http-port=8547
+      --host-allowlist=*
+      --rpc-http-cors-origins=all
+      --p2p-port=30305
+      --bootnodes=enode://<node1_enode>@besu-node1:30303
+    ports:
+      - 8547:8547
+      - 30305:30305
+
+  node4:
+    image: hyperledger/besu:latest
+    container_name: besu-node4
+    volumes:
+      - ./Node-4/data:/opt/besu/data
+      - ./genesis.json:/opt/besu/genesis.json
+    command: >
+      --data-path=/opt/besu/data
+      --genesis-file=/opt/besu/genesis.json
+      --network-id=2025
+      --rpc-http-enabled
+      --rpc-http-port=8548
+      --host-allowlist=*
+      --rpc-http-cors-origins=all
+      --p2p-port=30306
+      --bootnodes=enode://<node1_enode>@besu-node1:30303
+    ports:
+      - 8548:8548
+      - 30306:30306
